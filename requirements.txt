@@ -1,0 +1,11 @@
+altair
+black
+certifi
+flake8
+ipywidgets
+jupyterlab
+matplotlib
+pandas
+pylint
+requests
+vega-datasets
