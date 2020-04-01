@@ -102,7 +102,9 @@ def plot_chart(field, x_title):
         .encode(
             alt.X(
                 f"{field}:{field == 'Date' and 'T' or 'Q'}",
-                axis=alt.Axis(title=x_title),
+                axis=field == "Date"
+                and alt.Axis(title=x_title)
+                or alt.Axis(title=x_title, tickMinStep=1),
             ),
             alt.Y("Deaths:Q", scale=alt.Scale(type="log", domain=domain)),
             alt.Color("Country:N"),
