@@ -89,11 +89,11 @@ def plot_chart(field, x_title):
         opacity=alt.condition(selection, alt.value(1), alt.value(0.12))
     ).add_selection(
         selection
-    ).interactive().properties(
-        width=1200,
-        height=700
-    ).configure_point(
+    ).interactive().configure_point(
         size=95
+    ).properties(
+        width="container",
+        height=700
     )
 
     return chart
@@ -107,10 +107,10 @@ two_charts_template = """
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@{vegalite_version}"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@{vegaembed_version}"></script>
 </head>
-<body>
+<body style="padding:3em">
 
-<div id="vis1"></div>
-<div id="vis2"></div>
+<div id="vis1" style="width:100%"></div>
+<div id="vis2" style="width:100%"></div>
 
 <script type="text/javascript">
   vegaEmbed('#vis1', {spec1}).catch(console.error);
