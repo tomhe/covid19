@@ -127,7 +127,10 @@ two_charts_template = """
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@{vegalite_version}"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@{vegaembed_version}"></script>
 </head>
-<body style="padding:3em">
+<body style="padding:3em;font-family: Sans-Serif;">
+<p>
+Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>.
+</p>
 
 <div id="vis1" style="width:100%"></div>
 <div id="vis2" style="width:100%"></div>
