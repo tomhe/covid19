@@ -87,10 +87,37 @@ def add_days_since_10(x):
 df["Day"] = df.apply(add_days_since_10, axis=1)
 df
 
+
+df["Diff"] = 0
+for country in countries:
+    df.update(
+        pd.DataFrame(
+            {"Diff": df[df.Country == country].Deaths.diff().fillna(0.0).astype(np.int)}
+        )
+    )
+df
+
+
+df["OneWeekDeaths"] = 0
+for country in countries:
+    df.update(
+        pd.DataFrame(
+            {
+                "OneWeekDeaths": df[df.Country == country]
+                .Diff.rolling(min_periods=1, window=7)
+                .sum()
+                .fillna(0.0)
+                .astype(np.int)
+            }
+        )
+    )
+df
+
+
 """## Plot the Dataset"""
 
 
-def plot_chart(field, x_title):
+def plot_chart(x_field, x_title, y_field, y_title):
     domain = (10, int(df.Deaths.max()))
 
     selection = alt.selection_multi(fields=["Country"], bind="legend")
@@ -101,15 +128,19 @@ def plot_chart(field, x_title):
         .mark_line(point=True, interpolate="monotone")
         .encode(
             alt.X(
-                f"{field}:{field == 'Date' and 'T' or 'Q'}",
-                axis=field == "Date"
+                f"{x_field}:{x_field == 'Date' and 'T' or 'Q'}",
+                axis=x_field == "Date"
                 and alt.Axis(title=x_title)
                 or alt.Axis(title=x_title, tickMinStep=1),
             ),
-            alt.Y("Deaths:Q", scale=alt.Scale(type="log", domain=domain)),
+            alt.Y(
+                f"{y_field}:Q",
+                scale=alt.Scale(type="log", domain=domain),
+                axis=alt.Axis(title=y_title),
+            ),
             alt.Color("Country:N"),
             shape=alt.Shape("Country"),
-            tooltip=["Country", "Deaths", field],
+            tooltip=["Country", y_field, x_field],
             opacity=alt.condition(selection, alt.value(1), alt.value(0.12)),
         )
         .add_selection(selection)
@@ -121,7 +152,7 @@ def plot_chart(field, x_title):
     return chart
 
 
-two_charts_template = """
+charts_template = """
 <!DOCTYPE html>
 <html>
 <head>
@@ -136,26 +167,43 @@ Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="h
 
 <div id="vis1" style="width:100%"></div>
 <div id="vis2" style="width:100%"></div>
+<div id="vis3" style="width:100%"></div>
 
 <script type="text/javascript">
   vegaEmbed('#vis1', {spec1}).catch(console.error);
   vegaEmbed('#vis2', {spec2}).catch(console.error);
+  vegaEmbed('#vis3', {spec3}).catch(console.error);
 </script>
 </body>
 </html>
 """
 
 
-chart1 = plot_chart("Date", "Date")
-chart2 = plot_chart("Day", "Number of days since ~10th death")
+chart1 = plot_chart(
+    x_field="Date", x_title="Date", y_field="Deaths", y_title="Total deaths"
+)
+chart2 = plot_chart(
+    x_field="Day",
+    x_title="Number of days since ~10th death",
+    y_field="Deaths",
+    y_title="Total deaths",
+)
+chart3 = plot_chart(
+    x_field="Day",
+    x_title="Number of days since ~10th death",
+    y_field="OneWeekDeaths",
+    y_title="Deaths per week",
+)
 
+print("Writing plots")
 with open("docs/index.html", "w") as f:
     f.write(
-        two_charts_template.format(
+        charts_template.format(
             vega_version=alt.VEGA_VERSION,
             vegalite_version=alt.VEGALITE_VERSION,
             vegaembed_version=alt.VEGAEMBED_VERSION,
             spec1=chart1.to_json(indent=None),
             spec2=chart2.to_json(indent=None),
+            spec3=chart3.to_json(indent=None),
         )
     )
