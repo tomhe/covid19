@@ -124,7 +124,7 @@ two_charts_template = """
 chart1 = plot_chart("Date", "Date")
 chart2 = plot_chart("Day", "Number of days since ~10th death")
 
-with open("doc/index.html", "w") as f:
+with open("docs/index.html", "w") as f:
     f.write(two_charts_template.format(
         vega_version=alt.VEGA_VERSION,
         vegalite_version=alt.VEGALITE_VERSION,
