@@ -3,7 +3,8 @@ while true; do
     git fetch
     git rebase origin/master
     python covid19.py
-    git commit -a -m "Automatic update"
+    git add -f docs/index.html
+    git commit -m "Automatic update"
     git push origin HEAD:master
     sleep 300
 done
