@@ -168,6 +168,7 @@ charts_template = """
 <p>
 Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a> and inspired by <a href="https://www.ft.com/coronavirus-latest">Financial Times' Coronavirus tracker</a> by <a href="https://twitter.com/jburnmurdoch">John Burn-Murdoch</a> et al.
 </p>
+<p>Hint: The countries in the "Country" legends to the right of the charts can be "shift clicked" to select only a few countries (or a single country).</p>
 
 <h2>Cumulative Deaths</h2>
 <p>This chart shows the cumulative number of deaths by date.</p>
