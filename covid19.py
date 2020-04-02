@@ -113,19 +113,17 @@ for country in countries:
     )
 df
 
+df["Diff"] = df["Diff"][df["Diff"] != 0]
 
 """## Plot the Dataset"""
 
 
-def plot_chart(x_field, x_title, y_field, y_title):
-    domain = (10, int(df.Deaths.max()))
-
+def plot_chart(x_field, x_title, y_field, y_title, interpolate=None):
     selection = alt.selection_multi(fields=["Country"], bind="legend")
 
     chart = (
         alt.Chart(df)
-        .transform_filter(alt.datum.Deaths >= 10)
-        .mark_line(point=True, interpolate="monotone")
+        .transform_filter(alt.datum[y_field] >= 10)
         .encode(
             alt.X(
                 f"{x_field}:{x_field == 'Date' and 'T' or 'Q'}",
@@ -135,19 +133,24 @@ def plot_chart(x_field, x_title, y_field, y_title):
             ),
             alt.Y(
                 f"{y_field}:Q",
-                scale=alt.Scale(type="log", domain=domain),
+                scale=alt.Scale(type="log"),
                 axis=alt.Axis(title=y_title),
             ),
             alt.Color("Country:N"),
-            shape=alt.Shape("Country"),
+            #  shape=alt.Shape("Country"),
             tooltip=["Country", y_field, x_field],
             opacity=alt.condition(selection, alt.value(1), alt.value(0.12)),
         )
         .add_selection(selection)
         .interactive()
-        .configure_point(size=95)
+        #.configure_point(size=95)
         .properties(width="container", height=700)
     )
+
+    if interpolate:
+        chart = chart.mark_line(point=True, interpolate=interpolate)
+    else:
+        chart = chart.mark_line(point=True)
 
     return chart
 
@@ -165,14 +168,29 @@ charts_template = """
 Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>.
 </p>
 
+<h1>Cumulative Deaths</h1>
+<p>This chart shows the cumulative number of deaths by date.</p>
 <div id="vis1" style="width:100%"></div>
+
+<h1>Cumulative Deaths Since Same Day of Outbreak</h1>
+<p>This chart shows the cumulative number of deaths by number of days since 10th death.</p>
 <div id="vis2" style="width:100%"></div>
+
+<h1>Deaths per Week</h1>
+<p>This chart shows the number deaths per week by number of days since 10th death.</p>
 <div id="vis3" style="width:100%"></div>
+
+<!--
+<h1>Deaths per Day</h1>
+<p>This chart shows the number deaths per day by number of days since 10th death.</p>
+<div id="vis4" style="width:100%"></div>
+-->
 
 <script type="text/javascript">
   vegaEmbed('#vis1', {spec1}).catch(console.error);
   vegaEmbed('#vis2', {spec2}).catch(console.error);
   vegaEmbed('#vis3', {spec3}).catch(console.error);
+  vegaEmbed('#vis4', {spec4}).catch(console.error);
 </script>
 </body>
 </html>
@@ -180,19 +198,29 @@ Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="h
 
 
 chart1 = plot_chart(
-    x_field="Date", x_title="Date", y_field="Deaths", y_title="Total deaths"
+    x_field="Date", x_title="Date", y_field="Deaths", y_title="Total deaths",
+    interpolate="monotone"
 )
 chart2 = plot_chart(
     x_field="Day",
     x_title="Number of days since ~10th death",
     y_field="Deaths",
     y_title="Total deaths",
+    interpolate="monotone"
 )
 chart3 = plot_chart(
     x_field="Day",
     x_title="Number of days since ~10th death",
     y_field="OneWeekDeaths",
     y_title="Deaths per week",
+    interpolate="monotone"
+)
+chart4 = plot_chart(
+    x_field="Day",
+    x_title="Number of days since ~10th death",
+    y_field="Diff",
+    y_title="Deaths per day",
+    interpolate="monotone"
 )
 
 print("Writing plots")
@@ -205,5 +233,6 @@ with open("docs/index.html", "w") as f:
             spec1=chart1.to_json(indent=None),
             spec2=chart2.to_json(indent=None),
             spec3=chart3.to_json(indent=None),
+            spec4=chart4.to_json(indent=None),
         )
     )
