@@ -53,7 +53,7 @@ countries = [
     "US",
     "United Kingdom",
     "Belgium",
-    "China"
+    "China",
 ]
 df = df[df["Country"].isin(countries)]
 df
@@ -143,14 +143,11 @@ def plot_chart(x_field, x_title, y_field, y_title, interpolate=None):
         )
         .add_selection(selection)
         .interactive()
-        #.configure_point(size=95)
         .properties(width="container", height=700)
     )
 
     if interpolate:
-        chart = chart.mark_line(point=True, interpolate=interpolate)
-    else:
-        chart = chart.mark_line(point=True)
+        chart = chart.mark_line(interpolate=interpolate)
 
     return chart
 
@@ -200,29 +197,32 @@ Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="h
 
 
 chart1 = plot_chart(
-    x_field="Date", x_title="Date", y_field="Deaths", y_title="Total deaths",
-    interpolate="monotone"
+    x_field="Date",
+    x_title="Date",
+    y_field="Deaths",
+    y_title="Total deaths",
+    interpolate="monotone",
 )
 chart2 = plot_chart(
     x_field="Day",
     x_title="Number of days since ~10th death",
     y_field="Deaths",
     y_title="Total deaths",
-    interpolate="monotone"
+    interpolate="monotone",
 )
 chart3 = plot_chart(
     x_field="Day",
     x_title="Number of days since ~10th death",
     y_field="OneWeekDeaths",
     y_title="Deaths per week",
-    interpolate="monotone"
+    interpolate="monotone",
 )
 chart4 = plot_chart(
     x_field="Day",
     x_title="Number of days since ~10th death",
     y_field="Diff",
     y_title="Deaths per day",
-    interpolate="monotone"
+    interpolate="monotone",
 )
 
 print("Writing plots")
