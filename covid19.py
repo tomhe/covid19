@@ -53,7 +53,7 @@ countries = [
     "US",
     "United Kingdom",
     "Belgium",
-    "Netherlands",
+    "China"
 ]
 df = df[df["Country"].isin(countries)]
 df
