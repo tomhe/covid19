@@ -164,24 +164,25 @@ charts_template = """
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@{vegaembed_version}"></script>
 </head>
 <body style="padding:3em;font-family: Sans-Serif;">
+<h1>COVID-19 Visualizations</h1>
 <p>
 Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>.
 </p>
 
-<h1>Cumulative Deaths</h1>
+<h2>Cumulative Deaths</h2>
 <p>This chart shows the cumulative number of deaths by date.</p>
 <div id="vis1" style="width:100%"></div>
 
-<h1>Cumulative Deaths Since Same Day of Outbreak</h1>
+<h2>Cumulative Deaths Since Same Day of Outbreak</h2>
 <p>This chart shows the cumulative number of deaths by number of days since 10th death.</p>
 <div id="vis2" style="width:100%"></div>
 
-<h1>Deaths per Week</h1>
+<h2>Deaths per Week</h2>
 <p>This chart shows the number deaths per week by number of days since 10th death.</p>
 <div id="vis3" style="width:100%"></div>
 
 <!--
-<h1>Deaths per Day</h1>
+<h2>Deaths per Day</h2>
 <p>This chart shows the number deaths per day by number of days since 10th death.</p>
 <div id="vis4" style="width:100%"></div>
 -->
