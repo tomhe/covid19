@@ -139,7 +139,7 @@ def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=Non
             ),
             alt.Color("Country:N"),
             #  shape=alt.Shape("Country"),
-            tooltip=["Country", y_field, x_field],
+            tooltip=["Country", "Deaths", "DeathsPerDay", "Day", "Date"],
             opacity=alt.condition(selection, alt.value(1), alt.value(0.12)),
         )
         .add_selection(selection)
@@ -168,21 +168,21 @@ Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="h
 </p>
 <p>Hint: The countries in the "Country" legends to the right of the charts can be "shift clicked" to select only a few countries (or a single country).</p>
 
-<h2>Cumulative Deaths</h2>
+<h2>Cumulative Deaths by Date</h2>
 <p>This chart shows the cumulative number of deaths by date.</p>
 <div id="vis1" style="width:100%"></div>
 
-<h2>Cumulative Deaths Since Same Day of Outbreak</h2>
+<h2>Cumulative Deaths by Same Day of Outbreak</h2>
 <p>This chart shows the cumulative number of deaths by number of days since 10th death.</p>
 <div id="vis2" style="width:100%"></div>
 
-<h2>Deaths per Day since Same Day of Outbreak</h2>
+<h2>Deaths per Day by Date</h2>
+<p>This chart shows the number deaths per day (7-day rolling average) by date.</p>
+<div id="vis3" style="width:100%"></div>
+
+<h2>Deaths per Day by Same Day of Outbreak</h2>
 <p>This chart shows the number deaths per day (7-day rolling average) by number of days since 10th death.</p>
 <div id="vis4" style="width:100%"></div>
-
-<h2>Deaths per Week Since Same Day of Outbreak</h2>
-<p>This chart shows the number deaths per week by number of days since 10th death.</p>
-<div id="vis3" style="width:100%"></div>
 
 
 <script type="text/javascript">
@@ -214,11 +214,11 @@ chart2 = plot_chart(
 )
 chart3 = plot_chart(
     df=df[df.Day >= 0],
-    x_field="Day",
-    x_title="Number of days since ~10th death",
-    y_field="DeathsPerWeek",
-    y_title="Deaths per week",
-    y_min=10,
+    x_field="Date",
+    x_title="Date",
+    y_field="DeathsPerDay",
+    y_title="Deaths per day (7-day rolling average)",
+    y_min=1,
     interpolate="monotone",
 )
 chart4 = plot_chart(
