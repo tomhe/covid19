@@ -98,32 +98,33 @@ for country in countries:
 df
 
 
-df["OneWeekDeaths"] = 0
+df["DeathsPerWeek"] = 0
 for country in countries:
     df.update(
         pd.DataFrame(
             {
-                "OneWeekDeaths": df[df.Country == country]
+                "DeathsPerWeek": df[df.Country == country]
                 .Diff.rolling(min_periods=1, window=7)
                 .sum()
                 .fillna(0.0)
-                .astype(np.int)
+                .astype(np.float)
             }
         )
     )
 df
 
-df["Diff"] = df["Diff"][df["Diff"] != 0]
+
+df["DeathsPerDay"] = np.round(df["DeathsPerWeek"] / 7.0, decimals=1)
+
 
 """## Plot the Dataset"""
 
 
-def plot_chart(x_field, x_title, y_field, y_title, interpolate=None):
+def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=None):
     selection = alt.selection_multi(fields=["Country"], bind="legend")
-
     chart = (
         alt.Chart(df)
-        .transform_filter(alt.datum[y_field] >= 10)
+        .transform_filter(alt.datum[y_field] >= y_min)
         .encode(
             alt.X(
                 f"{x_field}:{x_field == 'Date' and 'T' or 'Q'}",
@@ -175,15 +176,14 @@ Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="h
 <p>This chart shows the cumulative number of deaths by number of days since 10th death.</p>
 <div id="vis2" style="width:100%"></div>
 
+<h2>Deaths per Day since Same Day of Outbreak</h2>
+<p>This chart shows the number deaths per day (7-day rolling average) by number of days since 10th death.</p>
+<div id="vis4" style="width:100%"></div>
+
 <h2>Deaths per Week Since Same Day of Outbreak</h2>
 <p>This chart shows the number deaths per week by number of days since 10th death.</p>
 <div id="vis3" style="width:100%"></div>
 
-<!--
-<h2>Deaths per Day</h2>
-<p>This chart shows the number deaths per day by number of days since 10th death.</p>
-<div id="vis4" style="width:100%"></div>
--->
 
 <script type="text/javascript">
   vegaEmbed('#vis1', {spec1}).catch(console.error);
@@ -197,6 +197,7 @@ Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="h
 
 
 chart1 = plot_chart(
+    df=df,
     x_field="Date",
     x_title="Date",
     y_field="Deaths",
@@ -204,6 +205,7 @@ chart1 = plot_chart(
     interpolate="monotone",
 )
 chart2 = plot_chart(
+    df=df[df.Day >= 0],
     x_field="Day",
     x_title="Number of days since ~10th death",
     y_field="Deaths",
@@ -211,17 +213,21 @@ chart2 = plot_chart(
     interpolate="monotone",
 )
 chart3 = plot_chart(
+    df=df[df.Day >= 0],
     x_field="Day",
     x_title="Number of days since ~10th death",
-    y_field="OneWeekDeaths",
+    y_field="DeathsPerWeek",
     y_title="Deaths per week",
+    y_min=10,
     interpolate="monotone",
 )
 chart4 = plot_chart(
+    df=df[df.Day >= 0],
     x_field="Day",
     x_title="Number of days since ~10th death",
-    y_field="Diff",
-    y_title="Deaths per day",
+    y_field="DeathsPerDay",
+    y_title="Deaths per day (7-day rolling average)",
+    y_min=1,
     interpolate="monotone",
 )
 
