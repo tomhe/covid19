@@ -116,7 +116,6 @@ df
 
 df["DeathsPerDay"] = np.round(df["DeathsPerWeek"] / 7.0, decimals=1)
 
-
 """## Plot the Dataset"""
 
 
@@ -138,7 +137,6 @@ def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=Non
                 axis=alt.Axis(title=y_title),
             ),
             alt.Color("Country:N"),
-            #  shape=alt.Shape("Country"),
             tooltip=["Country", "Deaths", "DeathsPerDay", "Day", "Date"],
             opacity=alt.condition(selection, alt.value(1), alt.value(0.12)),
         )
@@ -174,6 +172,10 @@ Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="h
 
 <h2>Cumulative Deaths by Same Day of Outbreak</h2>
 <p>This chart shows the cumulative number of deaths by number of days since 10th death.</p>
+<p>
+The lines for each country are the same as in the chart directly above, but aligned
+horizontally to roughly match the point in time when the outbreak reached 10 accumulated
+deaths.</p>
 <div id="vis2" style="width:100%"></div>
 
 <h2>Deaths per Day by Date</h2>
@@ -182,6 +184,10 @@ Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="h
 
 <h2>Deaths per Day by Same Day of Outbreak</h2>
 <p>This chart shows the number deaths per day (7-day rolling average) by number of days since 10th death.</p>
+<p>
+The lines for each country are the same as in the chart directly above, but aligned
+horizontally to roughly match the point in time when the outbreak reached 10 accumulated
+deaths.</p>
 <div id="vis4" style="width:100%"></div>
 
 
