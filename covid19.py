@@ -41,20 +41,48 @@ df.sample(5)
 
 """Filter the data set on a small set of countries."""
 
-countries = [
-    "Sweden",
-    "Norway",
-    "Denmark",
-    "Finland",
-    "Italy",
-    "Spain",
-    "Germany",
-    "France",
-    "US",
-    "United Kingdom",
-    "Belgium",
-    "China",
+print(list(df["Country"]))
+countries_config = [
+    ("Argentina", False),
+    ("Australia", False),
+    ("Austria", False),
+    ("Belgium", False),
+    ("Brazil", False),
+    ("Canada", False),
+    ("China", True),
+    ("Denmark", True),
+    ("Finland", True),
+    ("France", True),
+    ("Germany", True),
+    ("Hungary", False),
+    ("India", False),
+    ("Indonesia", False),
+    ("Iran", False),
+    ("Israel", False),
+    ("Italy", True),
+    ("Japan", False),
+    ("Korea, South", True),
+    ("Malaysia", False),
+    ("Mexico", False),
+    ("Netherlands", False),
+    ("Norway", True),
+    ("Philippines", False),
+    ("Poland", False),
+    ("Portugal", False),
+    ("Russia", False),
+    ("Spain", True),
+    ("Sweden", True),
+    ("Switzerland", False),
+    ("Thailand", False),
+    ("Turkey", False),
+    ("United Kingdom", True),
+    ("US", True),
+    # ("New Zealand", False),
+    # ("Vietnam", False),
 ]
+countries = [c for c, _ in countries_config]
+selected_countries = [c for c, selected in countries_config if selected]
+print("Selected:", selected_countries)
 df = df[df["Country"].isin(countries)]
 df
 
@@ -121,7 +149,11 @@ df["DeathsPerDay"] = np.round(df["DeathsPerWeek"] / 7.0, decimals=1)
 
 
 def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=None):
-    selection = alt.selection_multi(fields=["Country"], bind="legend")
+    selection = alt.selection_multi(
+        fields=["Country"],
+        bind="legend",
+        init=[{"Country": val} for val in selected_countries],
+    )
     chart = (
         alt.Chart(df)
         .transform_filter(alt.datum[y_field] >= y_min)
