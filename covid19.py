@@ -182,7 +182,7 @@ charts_template = """
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@{vegalite_version}"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@{vegaembed_version}"></script>
 </head>
-<body style="padding:3em;font-family: Sans-Serif;">
+<body style="padding:3em;font-family: Sans-Serif; -webkit-text-size-adjust: none;">
 <h1>COVID-19 Visualizations</h1>
 <p>
 Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a> and inspired by <a href="https://www.ft.com/coronavirus-latest">Financial Times' Coronavirus tracker</a> by <a href="https://twitter.com/jburnmurdoch">John Burn-Murdoch</a> et al.
