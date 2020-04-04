@@ -187,7 +187,7 @@ charts_template = """
     }}
     div.chart {{
       width: 100%;
-      height: 550px;/* 90v; */
+      height: 700px;/* 90v; */
     }}
   </style>
 </head>
