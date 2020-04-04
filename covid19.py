@@ -153,8 +153,7 @@ def plot_chart(
         )
     )
 
-    if interpolate:
-        chart = chart.mark_line(interpolate=interpolate)
+    chart = chart.mark_line(interpolate=interpolate, size=1.5)
 
     text = (
         alt.Chart(df)
@@ -170,7 +169,7 @@ def plot_chart(
         (chart + text)
         .add_selection(selection)
         .interactive()
-        .properties(width="container", height=500)
+        .properties(width="container", height="container")
     )
 
 
@@ -181,8 +180,18 @@ charts_template = """
   <script src="https://cdn.jsdelivr.net/npm/vega@{vega_version}"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@{vegalite_version}"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@{vegaembed_version}"></script>
+  <style>
+    body {{
+      padding: 3em;
+      font-family: Sans-Serif;
+    }}
+    div.chart {{
+      width: 100%;
+      height: 90vh;
+    }}
+  </style>
 </head>
-<body style="padding:3em;font-family: Sans-Serif; -webkit-text-size-adjust: 100%;">
+<body">
 <h1>COVID-19 Visualizations</h1>
 <p>
 Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a> and inspired by <a href="https://www.ft.com/coronavirus-latest">Financial Times' Coronavirus tracker</a> by <a href="https://twitter.com/jburnmurdoch">John Burn-Murdoch</a> et al.
@@ -191,7 +200,7 @@ Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="h
 
 <h2>Cumulative Deaths by Date</h2>
 <p>This chart shows the cumulative number of deaths by date.</p>
-<div id="vis1" style="width:100%"></div>
+<div class="chart" id="vis1"></div>
 
 <h2>Cumulative Deaths by Same Day of Outbreak</h2>
 <p>This chart shows the cumulative number of deaths by number of days since 10th death.</p>
@@ -199,11 +208,11 @@ Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="h
 The lines for each country are the same as in the chart directly above, but aligned
 horizontally to roughly match the point in time when the outbreak reached 10 accumulated
 deaths.</p>
-<div id="vis2" style="width:100%"></div>
+<div class="chart" id="vis2"></div>
 
 <h2>Deaths per Day by Date</h2>
 <p>This chart shows the number deaths per day (7-day rolling average) by date.</p>
-<div id="vis3" style="width:100%"></div>
+<div class="chart" id="vis3"></div>
 
 <h2>Deaths per Day by Same Day of Outbreak</h2>
 <p>This chart shows the number deaths per day (7-day rolling average) by number of days since 10th death.</p>
@@ -211,7 +220,7 @@ deaths.</p>
 The lines for each country are the same as in the chart directly above, but aligned
 horizontally to roughly match the point in time when the outbreak reached 10 accumulated
 deaths.</p>
-<div id="vis4" style="width:100%"></div>
+<div class="chart" id="vis4"></div>
 
 
 <script type="text/javascript">
