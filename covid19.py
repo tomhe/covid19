@@ -169,7 +169,7 @@ def plot_chart(
         (chart + text)
         .add_selection(selection)
         .interactive()
-        .properties(width="container", height=700)
+        .properties(width="container", height=500)
     )
 
 
