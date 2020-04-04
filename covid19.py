@@ -164,7 +164,8 @@ def plot_chart(
             y=alt.Y(y_field, aggregate={"argmax": x_field}),
             text="Country",
         )
-    )
+    ).transform_filter(selection)
+
     return (
         (chart + text)
         .add_selection(selection)
