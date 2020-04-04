@@ -153,7 +153,7 @@ def plot_chart(
         )
     )
 
-    chart = chart.mark_line(interpolate=interpolate, size=1.5)
+    chart = chart.mark_line(interpolate=interpolate, size=1.7)
 
     text = (
         alt.Chart(df)
@@ -187,7 +187,7 @@ charts_template = """
     }}
     div.chart {{
       width: 100%;
-      height: 90vh;
+      height: 550px;/* 90v; */
     }}
   </style>
 </head>
