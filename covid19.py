@@ -119,8 +119,19 @@ df["DeathsPerDay"] = np.round(df["DeathsPerWeek"] / 7.0, decimals=1)
 """## Plot the Dataset"""
 
 
-def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=None):
+def plot_chart(
+    df,
+    x_field,
+    x_title,
+    y_field,
+    y_title,
+    y_min=10,
+    interpolate=None,
+    align="left",
+    dx=0,
+):
     selection = alt.selection_multi(fields=["Country"], bind="legend")
+
     chart = (
         alt.Chart(df)
         .transform_filter(alt.datum[y_field] >= y_min)
@@ -140,15 +151,26 @@ def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=Non
             tooltip=["Country", "Deaths", "DeathsPerDay", "Day", "Date"],
             opacity=alt.condition(selection, alt.value(1), alt.value(0.12)),
         )
-        .add_selection(selection)
-        .interactive()
-        .properties(width="container", height=700)
     )
 
     if interpolate:
         chart = chart.mark_line(interpolate=interpolate)
 
-    return chart
+    text = (
+        alt.Chart(df)
+        .mark_text(align=align, baseline="middle", dx=dx)
+        .encode(
+            x=f"max({x_field})",
+            y=alt.Y(y_field, aggregate={"argmax": x_field}),
+            text="Country",
+        )
+    )
+    return (
+        (chart + text)
+        .add_selection(selection)
+        .interactive()
+        .properties(width="container", height=700)
+    )
 
 
 charts_template = """
@@ -209,6 +231,8 @@ chart1 = plot_chart(
     y_field="Deaths",
     y_title="Total deaths",
     interpolate="monotone",
+    align="right",
+    dx=-3,
 )
 chart2 = plot_chart(
     df=df[df.Day >= 0],
@@ -217,6 +241,8 @@ chart2 = plot_chart(
     y_field="Deaths",
     y_title="Total deaths",
     interpolate="monotone",
+    align="left",
+    dx=3,
 )
 chart3 = plot_chart(
     df=df[df.Day >= 0],
@@ -226,6 +252,8 @@ chart3 = plot_chart(
     y_title="Deaths per day (7-day rolling average)",
     y_min=1,
     interpolate="monotone",
+    align="right",
+    dx=-3,
 )
 chart4 = plot_chart(
     df=df[df.Day >= 0],
@@ -235,6 +263,8 @@ chart4 = plot_chart(
     y_title="Deaths per day (7-day rolling average)",
     y_min=1,
     interpolate="monotone",
+    align="left",
+    dx=3,
 )
 
 print("Writing plots")
