@@ -146,7 +146,7 @@ def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=Non
     if x_field == "Date":
         today = datetime.datetime.now()
         today_plus_5 = today + datetime.timedelta(days=5)
-        domain = ["2020-02-29", str(today_plus_5).split()[0]]
+        domain = ["2020-02-25", str(today_plus_5).split()[0]]
         x = alt.X(
             f"{x_field}:T",
             axis=alt.Axis(title=x_title),
