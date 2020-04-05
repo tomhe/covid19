@@ -43,18 +43,20 @@ df.sample(5)
 """Filter the data set on a small set of countries."""
 
 countries = [
-    "Sweden",
-    "Norway",
+    "Australia",
+    "Austria",
+    "Belgium",
+    "Canada",
     "Denmark",
     "Finland",
-    "Italy",
-    "Spain",
-    "Germany",
     "France",
-    "US",
+    "Germany",
+    "Italy",
+    "Norway",
+    "Spain",
+    "Sweden",
     "United Kingdom",
-    "Belgium",
-    "China",
+    "US",
 ]
 df = df[df["Country"].isin(countries)]
 df
@@ -144,7 +146,7 @@ def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=Non
     if x_field == "Date":
         today = datetime.datetime.now()
         today_plus_5 = today + datetime.timedelta(days=5)
-        domain = ["2020-01-22", str(today_plus_5).split()[0]]
+        domain = ["2020-02-29", str(today_plus_5).split()[0]]
         x = alt.X(
             f"{x_field}:T",
             axis=alt.Axis(title=x_title),
@@ -226,7 +228,7 @@ charts_template = """
     }}
     div.chart {{
       width: 100%;
-      height: 700px;/* 90v; */
+      height: 40em;/* 90v; */
     }}
   </style>
 </head>
