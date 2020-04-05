@@ -75,16 +75,14 @@ Create a dataframe that holds the date close to 10th death.
 ten_days = df.loc[df.Deaths >= 8].groupby(["Country"]).head(1)
 ten_days
 
-"""Add "Day" column, that holds "days since 10th death", to dataframe."""
 
-
-def add_days_since_10(x):
+def add_days_since_10_deaths(x):
     country = x.Country
     ten_days_date = ten_days[ten_days.Country == country].Date
     return np.int((x.Date - ten_days_date).dt.days)
 
 
-df["Day"] = df.apply(add_days_since_10, axis=1)
+df["DaySince10Deaths"] = df.apply(add_days_since_10_deaths, axis=1)
 df
 
 
@@ -115,6 +113,26 @@ df
 
 
 df["DeathsPerDay"] = np.round(df["DeathsPerWeek"] / 7.0, decimals=1)
+
+
+three_deaths_per_day = df.loc[df.DeathsPerDay >= 3].groupby(["Country"]).head(1)
+three_deaths_per_day
+
+
+def add_days_since_3_deaths_per_day(x):
+    country = x.Country
+    three_deaths_per_day_date = three_deaths_per_day[
+        three_deaths_per_day.Country == country
+    ].Date
+    days = (x.Date - three_deaths_per_day_date).dt.days
+    if list(days):
+        return np.int(days)
+    else:
+        return np.nan
+
+
+df["DaySince3DeathsPerDay"] = df.apply(add_days_since_3_deaths_per_day, axis=1)
+df
 
 """## Plot the Dataset"""
 
@@ -148,7 +166,14 @@ def plot_chart(
                 axis=alt.Axis(title=y_title),
             ),
             alt.Color("Country:N"),
-            tooltip=["Country", "Deaths", "DeathsPerDay", "Day", "Date"],
+            tooltip=[
+                "Country",
+                "Deaths",
+                "DeathsPerDay",
+                "DaySince10Deaths",
+                "DaySince3DeathsPerDay",
+                "Date",
+            ],
             opacity=alt.condition(selection, alt.value(1), alt.value(0.12)),
         )
     )
@@ -165,8 +190,19 @@ def plot_chart(
         )
     ).transform_filter(selection)
 
+    end_point = (
+        alt.Chart(df)
+        .mark_point()
+        .encode(
+            x=f"max({x_field})",
+            y=alt.Y(y_field, aggregate={"argmax": x_field}),
+            color="Country:N",
+            opacity=alt.condition(selection, alt.value(1), alt.value(0.12)),
+        )
+    ).transform_filter(selection)
+
     return (
-        (chart + text)
+        (chart + end_point + text)
         .add_selection(selection)
         .interactive()
         .properties(width="container", height="container")
@@ -215,11 +251,10 @@ deaths.</p>
 <div class="chart" id="vis3"></div>
 
 <h2>Deaths per Day by Same Day of Outbreak</h2>
-<p>This chart shows the number deaths per day (7-day rolling average) by number of days since 10th death.</p>
+<p>This chart shows the number deaths per day (7-day rolling average) by number of days since 3 deaths per day.</p>
 <p>
 The lines for each country are the same as in the chart directly above, but aligned
-horizontally to roughly match the point in time when the outbreak reached 10 accumulated
-deaths.</p>
+horizontally to roughly match the point in time when the outbreak reached 3 deaths per day (7-day rolling average).</p>
 <div class="chart" id="vis4"></div>
 
 
@@ -242,20 +277,20 @@ chart1 = plot_chart(
     y_title="Total deaths",
     interpolate="monotone",
     align="right",
-    dx=-3,
+    dx=-5,
 )
 chart2 = plot_chart(
-    df=df[df.Day >= 0],
-    x_field="Day",
+    df=df[df.DaySince10Deaths >= 0],
+    x_field="DaySince10Deaths",
     x_title="Number of days since ~10th death",
     y_field="Deaths",
     y_title="Total deaths",
     interpolate="monotone",
     align="left",
-    dx=3,
+    dx=5,
 )
 chart3 = plot_chart(
-    df=df[df.Day >= 0],
+    df=df[df.DaySince3DeathsPerDay >= 0],
     x_field="Date",
     x_title="Date",
     y_field="DeathsPerDay",
@@ -263,18 +298,18 @@ chart3 = plot_chart(
     y_min=1,
     interpolate="monotone",
     align="right",
-    dx=-3,
+    dx=-5,
 )
 chart4 = plot_chart(
-    df=df[df.Day >= 0],
-    x_field="Day",
-    x_title="Number of days since ~10th death",
+    df=df[df.DaySince3DeathsPerDay >= 0],
+    x_field="DaySince3DeathsPerDay",
+    x_title="Number of days since 3 deaths per day",
     y_field="DeathsPerDay",
     y_title="Deaths per day (7-day rolling average)",
     y_min=1,
     interpolate="monotone",
     align="left",
-    dx=3,
+    dx=5,
 )
 
 print("Writing plots")
