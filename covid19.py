@@ -291,7 +291,7 @@ chart2 = plot_chart(
     interpolate="monotone",
 )
 chart3 = plot_chart(
-    df=df[df.DaySince3DeathsPerDay >= 0],
+    df=df[df.DeathsPerDay >= 0],
     x_field="Date",
     x_title="Date",
     y_field="DeathsPerDay",
