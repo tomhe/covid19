@@ -11,6 +11,7 @@ Original file is located at
 This notebook uses the data provided by [Johns Hopkins CSSE](https://github.com/CSSEGISandData/COVID-19).
 """
 
+import datetime
 import pandas as pd
 import numpy as np
 import altair as alt
@@ -137,29 +138,31 @@ df
 """## Plot the Dataset"""
 
 
-def plot_chart(
-    df,
-    x_field,
-    x_title,
-    y_field,
-    y_title,
-    y_min=10,
-    interpolate=None,
-    align="left",
-    dx=0,
-):
+def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=None):
     selection = alt.selection_multi(fields=["Country"], bind="legend")
+
+    if x_field == "Date":
+        today = datetime.datetime.now()
+        today_plus_5 = today + datetime.timedelta(days=5)
+        domain = ["2020-01-22", str(today_plus_5).split()[0]]
+        x = alt.X(
+            f"{x_field}:T",
+            axis=alt.Axis(title=x_title),
+            scale=alt.Scale(domain=domain),
+        )
+    else:
+        domain = [0, int(df[x_field].max() + 2)]
+        x = alt.X(
+            f"{x_field}:Q",
+            axis=alt.Axis(title=x_title, tickMinStep=1),
+            scale=alt.Scale(domain=domain),
+        )
 
     chart = (
         alt.Chart(df)
         .transform_filter(alt.datum[y_field] >= y_min)
         .encode(
-            alt.X(
-                f"{x_field}:{x_field == 'Date' and 'T' or 'Q'}",
-                axis=x_field == "Date"
-                and alt.Axis(title=x_title)
-                or alt.Axis(title=x_title, tickMinStep=1),
-            ),
+            x,
             alt.Y(
                 f"{y_field}:Q",
                 scale=alt.Scale(type="log"),
@@ -182,7 +185,7 @@ def plot_chart(
 
     text = (
         alt.Chart(df)
-        .mark_text(align=align, baseline="middle", dx=dx)
+        .mark_text(align="left", baseline="middle", dx=6)
         .encode(
             x=f"max({x_field})",
             y=alt.Y(y_field, aggregate={"argmax": x_field}),
@@ -276,8 +279,6 @@ chart1 = plot_chart(
     y_field="Deaths",
     y_title="Total deaths",
     interpolate="monotone",
-    align="right",
-    dx=-5,
 )
 chart2 = plot_chart(
     df=df[df.DaySince10Deaths >= 0],
@@ -286,8 +287,6 @@ chart2 = plot_chart(
     y_field="Deaths",
     y_title="Total deaths",
     interpolate="monotone",
-    align="left",
-    dx=5,
 )
 chart3 = plot_chart(
     df=df[df.DaySince3DeathsPerDay >= 0],
@@ -297,8 +296,6 @@ chart3 = plot_chart(
     y_title="Deaths per day (7-day rolling average)",
     y_min=1,
     interpolate="monotone",
-    align="right",
-    dx=-5,
 )
 chart4 = plot_chart(
     df=df[df.DaySince3DeathsPerDay >= 0],
@@ -308,8 +305,6 @@ chart4 = plot_chart(
     y_title="Deaths per day (7-day rolling average)",
     y_min=1,
     interpolate="monotone",
-    align="left",
-    dx=5,
 )
 
 print("Writing plots")
