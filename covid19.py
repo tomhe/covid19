@@ -211,7 +211,7 @@ def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=Non
         .add_selection(selection)
         .interactive()
         .properties(width="container", height="container")
-    )
+    ).configure_legend(orient="bottom", columns=4)
 
 
 with open("docs/covid19_template.html") as f:
