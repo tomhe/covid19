@@ -214,65 +214,8 @@ def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=Non
     )
 
 
-charts_template = """
-<!DOCTYPE html>
-<html>
-<head>
-  <script src="https://cdn.jsdelivr.net/npm/vega@{vega_version}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-lite@{vegalite_version}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-embed@{vegaembed_version}"></script>
-  <style>
-    body {{
-      padding: 3em;
-      font-family: Sans-Serif;
-    }}
-    div.chart {{
-      width: 100%;
-      height: 40em;/* 90v; */
-    }}
-  </style>
-</head>
-<body">
-<h1>COVID-19 Visualizations</h1>
-<p>
-Made by <a href="https://twitter.com/tomhe">@tomhe</a> with data from <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a> and inspired by <a href="https://www.ft.com/coronavirus-latest">Financial Times' Coronavirus tracker</a> by <a href="https://twitter.com/jburnmurdoch">John Burn-Murdoch</a> et al.
-</p>
-<p>Hint: The countries in the "Country" legends to the right of the charts can be "shift clicked" to select only a few countries (or a single country).</p>
-
-<h2>Cumulative Deaths by Date</h2>
-<p>This chart shows the cumulative number of deaths by date.</p>
-<div class="chart" id="vis1"></div>
-
-<h2>Cumulative Deaths by Same Day of Outbreak</h2>
-<p>This chart shows the cumulative number of deaths by number of days since 10th death.</p>
-<p>
-The lines for each country are the same as in the chart directly above, but aligned
-horizontally to roughly match the point in time when the outbreak reached 10 accumulated
-deaths.</p>
-<div class="chart" id="vis2"></div>
-
-<h2>Deaths per Day by Date</h2>
-<p>This chart shows the number deaths per day (7-day rolling average) by date.</p>
-<div class="chart" id="vis3"></div>
-
-<h2>Deaths per Day by Same Day of Outbreak</h2>
-<p>This chart shows the number deaths per day (7-day rolling average) by number of days since 3 deaths per day.</p>
-<p>
-The lines for each country are the same as in the chart directly above, but aligned
-horizontally to roughly match the point in time when the outbreak reached 3 deaths per day (7-day rolling average).</p>
-<div class="chart" id="vis4"></div>
-
-
-<script type="text/javascript">
-  vegaEmbed('#vis1', {spec1}).catch(console.error);
-  vegaEmbed('#vis2', {spec2}).catch(console.error);
-  vegaEmbed('#vis3', {spec3}).catch(console.error);
-  vegaEmbed('#vis4', {spec4}).catch(console.error);
-</script>
-</body>
-</html>
-"""
-
+with open("docs/covid19_template.html") as f:
+    charts_template = f.read()
 
 chart1 = plot_chart(
     df=df,
