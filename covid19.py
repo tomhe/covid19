@@ -44,11 +44,11 @@ df.sample(5)
 
 countries = [
     "Australia",
-    "Austria",
+    # "Austria",
     "Belgium",
     "Canada",
     "Denmark",
-    "Finland",
+    # "Finland",
     "France",
     "Germany",
     "Italy",
