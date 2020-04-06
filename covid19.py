@@ -43,8 +43,8 @@ df.sample(5)
 """Filter the data set on a small set of countries."""
 
 countries = [
-    "Australia",
-    # "Austria",
+    # "Australia",
+    "Austria",
     "Belgium",
     "Canada",
     "Denmark",
