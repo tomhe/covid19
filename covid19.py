@@ -140,7 +140,7 @@ df
 """## Plot the Dataset"""
 
 
-def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=None):
+def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10):
     selection = alt.selection_multi(fields=["Country"], bind="legend")
 
     if x_field == "Date":
@@ -183,7 +183,7 @@ def plot_chart(df, x_field, x_title, y_field, y_title, y_min=10, interpolate=Non
         )
     )
 
-    chart = chart.mark_line(interpolate=interpolate, size=1.7)
+    chart = chart.mark_line(size=1.7)
 
     text = (
         alt.Chart(df)
@@ -218,12 +218,7 @@ with open("docs/covid19_template.html") as f:
     charts_template = f.read()
 
 chart1 = plot_chart(
-    df=df,
-    x_field="Date",
-    x_title="Date",
-    y_field="Deaths",
-    y_title="Total deaths",
-    interpolate="monotone",
+    df=df, x_field="Date", x_title="Date", y_field="Deaths", y_title="Total deaths",
 )
 chart2 = plot_chart(
     df=df[df.DaySince10Deaths >= 0],
@@ -231,7 +226,6 @@ chart2 = plot_chart(
     x_title="Number of days since ~10th death",
     y_field="Deaths",
     y_title="Total deaths",
-    interpolate="monotone",
 )
 chart3 = plot_chart(
     df=df[df.DeathsPerDay >= 0],
@@ -240,7 +234,6 @@ chart3 = plot_chart(
     y_field="DeathsPerDay",
     y_title="Deaths per day (7-day rolling average)",
     y_min=1,
-    interpolate="monotone",
 )
 chart4 = plot_chart(
     df=df[df.DaySince3DeathsPerDay >= 0],
@@ -249,7 +242,6 @@ chart4 = plot_chart(
     y_field="DeathsPerDay",
     y_title="Deaths per day (7-day rolling average)",
     y_min=1,
-    interpolate="monotone",
 )
 
 print("Writing plots")
