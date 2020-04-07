@@ -52,6 +52,7 @@ countries = [
     "France",
     "Germany",
     "Italy",
+    "Japan",
     "Norway",
     "Spain",
     "Sweden",
