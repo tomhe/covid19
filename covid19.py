@@ -48,7 +48,7 @@ countries = [
     "Belgium",
     "Canada",
     "Denmark",
-    # "Finland",
+    "Finland",
     "France",
     "Germany",
     "Italy",
